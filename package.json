@@ -1,16 +1,16 @@
 {
-  "name": "npm-template",
-  "version": "1.1.1",
+  "name": "@shgysk8zer0/node-dom",
+  "version": "0.0.1",
   "description": "A template repo for npm packages",
-  "keywords": [],
+  "keywords": ["html", "dom", "node-dom", "node-html"],
   "type": "module",
-  "main": "./cjs/index.cjs",
-  "module": "./index.js",
-  "unpkg": "./index.js",
+  "main": "./dom.cjs",
+  "module": "./dom.js",
+  "unpkg": "./dom.js",
   "exports": {
     ".": {
-      "import": "./index.js",
-      "require": "./cjs/index.cjs"
+      "import": "./dom.js",
+      "require": "./dom.cjs"
     },
     "./*.js": {
       "import": "./*.js",
@@ -50,7 +50,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shgysk8zer0/npm-template.git"
+    "url": "git+https://github.com/shgysk8zer0/@shgysk8zer0/node-dome.git"
   },
   "author": "Chris Zuber <admin@kernvalley.us>",
   "license": "MIT",
@@ -65,9 +65,9 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/shgysk8zer0/npm-template/issues"
+    "url": "https://github.com/shgysk8zer0/@shgysk8zer0/node-dome/issues"
   },
-  "homepage": "https://github.com/shgysk8zer0/npm-template#readme",
+  "homepage": "https://github.com/shgysk8zer0/@shgysk8zer0/node-dome#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@shgysk8zer0/js-utils": "^1.0.1",
