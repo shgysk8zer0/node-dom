@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.0.2] - 2023-10-20
+
+### Fixed
+- `element.attributes` now returns a `NamedNodeMap`
+- `dataset`, `classList`, `relList`, and `sandbox` now correspond to their attributes
+- `Attr`s now have `ownerElement`s
+- Can now `delete element.dataset.foo` and it will remove the `data-foo` attribute
+
 ## [v0.0.1] - 2023-10-20
 
 Initial Release

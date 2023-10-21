@@ -3,11 +3,8 @@ import { Document } from '../Document.js';
 import { DOMTokenList } from '../DOMTokenList.js';
 
 export const HTMLIFrameElement = Document.registerElement('iframe', class HTMLIFrameElement extends HTMLElement {
-	#sandbox;
-
 	constructor() {
 		super();
-		this.#sandbox = new DOMTokenList();
 	}
 
 	get allow() {
@@ -51,7 +48,7 @@ export const HTMLIFrameElement = Document.registerElement('iframe', class HTMLIF
 	}
 
 	get sandbox() {
-		return this.#sandbox;
+		return new DOMTokenList(this, 'sandbox');
 	}
 
 	get src() {

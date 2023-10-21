@@ -1,7 +1,7 @@
 import { spinalCase, htmlEscape, getDescendants } from './utils.js';
 import { DOMTokenList } from './DOMTokenList.js';
 import { HTMLCollection } from './HTMLCollection.js';
-// import { NamedNodeMap } from './NamedNodeMap.js';
+import { NamedNodeMap } from './NamedNodeMap.js';
 import { Attr } from './Attr.js';
 import { Node, Text } from './Node.js';
 
@@ -12,18 +12,24 @@ const SELF_CLOSING_TAGS = [
 ];
 
 export class Element extends Node {
-	#attrs;
-	#classList;
-	#part;
+	#attributes;
 	#parent;
 	#dataset;
 
 	constructor() {
 		super();
-		this.#attrs = new Map();
-		this.#classList = new DOMTokenList();
-		this.#dataset = new Map();
-		this.#part = new DOMTokenList();
+		this.#attributes = new NamedNodeMap();
+		this.#dataset = new Proxy(this, {
+			deleteProperty: (el, prop) => {
+				el.removeProperty('data-' + spinalCase(prop));
+			},
+			has: (el, prop) => el.hasAttribute('data-' + spinalCase(prop)),
+			get: (el, prop) => el.getAttribute('data-' + spinalCase(prop)),
+			set: (el, prop, val) => {
+				el.setAttribute('data-' + spinalCase(prop), val);
+				return true;
+			}
+		});
 	}
 
 	toString() {
@@ -31,29 +37,7 @@ export class Element extends Node {
 	}
 
 	get attributes() {
-		const attrs = [...this.#attrs.values()].map(attr => [attr.name, attr.value]);
-
-		if (this.#dataset.length !== 0) {
-			attrs.push(...this.#dataset);
-		}
-
-		if (this.#classList.length !== 0) {
-			attrs.push(['class', this.#classList.value]);
-		}
-
-		if (this.#part.length !== 0) {
-			attrs.push(['part', this.#part.value]);
-		}
-
-		if ('relList' in this && this.relList.length !==  0) {
-			attrs.push(['rel', this.relList.value]);
-		}
-
-		if ('sandbox' in this && this.sandbox.length !==  0) {
-			attrs.push(['sandbox', this.sandbox.value]);
-		}
-
-		return attrs;
+		return this.#attributes;
 	}
 
 	get childElementCount()  {
@@ -65,23 +49,19 @@ export class Element extends Node {
 	}
 
 	get classList() {
-		return this.#classList;
+		return new DOMTokenList(this, 'class');
 	}
 
 	get className() {
-		return [...this.#classList].join(' ');
+		return this.getAttribute('class');
+	}
+
+	set className(val) {
+		this.setAttribute('class', val);
 	}
 
 	get dataset() {
-		return new Proxy(this.#dataset, {
-			get: (map, prop) => {
-				return map.get('data-' + spinalCase(prop));
-			},
-			set: (map, prop, val) => {
-				map.set('data-' + spinalCase(prop), val);
-				return true;
-			}
-		});
+		return this.#dataset;
 	}
 
 	get firstElementChild() {
@@ -119,7 +99,7 @@ export class Element extends Node {
 	}
 
 	get part() {
-		return this.#part;
+		return new DOMTokenList(this, 'part');
 	}
 
 	get previousElementSibling() {
@@ -146,11 +126,11 @@ export class Element extends Node {
 		if (isSelfClosing) {
 			return attrs.length === 0
 				? `<${tag} />`
-				: `<${tag} ${attrs.map(([name, val]) => name + '="' + htmlEscape(val) + '"').join(' ')} />`;
+				: `<${tag} ${attrs.map(({ name, value = '' }) => name + '="' + htmlEscape(value) + '"').join(' ')} />`;
 		} else if (attrs.length === 0) {
 			return `<${tag}>${this.innerHTML}</${tag}>`;
 		} else {
-			return `<${tag} ${attrs.map(([name, val]) => name + '="' + htmlEscape(val) + '"').join(' ')}>${this.innerHTML}</${tag}>`;
+			return `<${tag} ${attrs.map(({ name, value = '' }) => name + '="' + htmlEscape(value) + '"').join(' ')}>${this.innerHTML}</${tag}>`;
 		}
 	}
 
@@ -193,7 +173,7 @@ export class Element extends Node {
 	}
 
 	hasAttribute(attr) {
-		return this.#attrs.has(attr) || '';
+		return this.attributes.some(({ name }) => name === attr);
 	}
 
 	prepend(...children) {
@@ -202,7 +182,7 @@ export class Element extends Node {
 	}
 
 	removeAttribute(attr) {
-		this.#attrs.delete(attr);
+		this.attributes.removeNamedItem(attr);
 	}
 
 	setAttribute(name, val) {
@@ -212,12 +192,13 @@ export class Element extends Node {
 	}
 
 	getAttributeNode(name) {
-		return this.#attrs.get(name);
+		return this.attributes.getNamedItem(name);
 	}
 
 	setAttributeNode(attr) {
 		if (attr instanceof Node && attr.nodeType === Node.ATTRIBUTE_NODE) {
-			this.#attrs.set(attr.name, attr);
+			attr.ownerElement = this;
+			this.attributes.setNamedItem(attr);
 		} else {
 			throw new TypeError('Not an Attr.');
 		}

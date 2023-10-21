@@ -3,11 +3,8 @@ import { Document } from '../Document.js';
 import { DOMTokenList } from '../DOMTokenList.js';
 
 export const HTMLAnchorElement = Document.registerElement('a', class HTMLAnchorElement extends HTMLElement {
-	#relList;
-
 	constructor() {
 		super();
-		this.#relList = new DOMTokenList();
 	}
 
 	get download() {
@@ -33,16 +30,15 @@ export const HTMLAnchorElement = Document.registerElement('a', class HTMLAnchorE
 	}
 
 	get rel() {
-		return this.#relList.value;
+		return this.getAttribute('rel');
 	}
 
 	set rel(val) {
-		this.#relList.remove(...this.#relList.values());
-		this.#relList.add(...val.split(' '));
+		this.setAttribute('rel', val);
 	}
 
 	get relList() {
-		return this.#relList;
+		return new DOMTokenList(this, 'rel');
 	}
 
 	get tagName() {

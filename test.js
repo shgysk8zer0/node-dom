@@ -47,6 +47,8 @@ a.relList.add('noreferrer', 'noopener');
 a.target = '_blank';
 a.append(img);
 
+console.log(a.getAttribute('rel'));
+
 div.classList.add('container');
 div.append(a);
 
@@ -57,6 +59,8 @@ link.media = 'all';
 iframe.src = 'https://events.kernvalley.us/embed/';
 iframe.sandbox.add('allow-script');
 iframe.part.add('content');
+iframe.hidden = true;
+iframe.attributes.removeNamedItem('hidden');
 
 document.head.append(base, link, script);
 
