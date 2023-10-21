@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.0.2] - 2023-10-20
 
+### Added
+- Add `Element.getAttributeNames()`
+
 ### Fixed
 - `element.attributes` now returns a `NamedNodeMap`
 - `dataset`, `classList`, `relList`, and `sandbox` now correspond to their attributes

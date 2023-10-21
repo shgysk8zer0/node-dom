@@ -156,6 +156,10 @@ export class Element extends Node {
 		}
 	}
 
+	getAttributeNames() {
+		return this.attributes.map(({ name })  => name);
+	}
+
 	getElementsByClassName(names) {
 		const classList = names.trim().split(' ').filter(str => str.length !== 0);
 
