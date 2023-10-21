@@ -59,7 +59,13 @@ export const HTMLScriptElement = Document.registerElement('script', class HTMLSc
 	}
 
 	get src() {
-		return this.getAttribute('src');
+		const base = this.baseURI;
+
+		if (base.length !== 0) {
+			return new URL(this.getAttribute('src'), base).href;
+		}  else {
+			return this.getAttribute('src');
+		}
 	}
 
 	set src(val) {

@@ -1,5 +1,5 @@
 import { NodeList } from './NodeList.js';
-import { htmlEscape } from './utils.js';
+import { getDescendants } from './utils.js';
 
 export class Node extends EventTarget {
 	#children;
@@ -9,6 +9,25 @@ export class Node extends EventTarget {
 		super();
 		this.#children = [];
 		this.#parent = null;
+	}
+
+	get baseURI() {
+		if (this.nodeType === Node.DOCUMENT_NODE) {
+			let base = '';
+
+			for (const el of getDescendants(this.documentElement)) {
+				if (el.tagName.toUpperCase() === 'BASE' && el.hasAttribute('href')) {
+					base = el.href;
+					break;
+				}
+			}
+
+			return base;
+		} else if  (this.isConnected) {
+			return this.ownerDocument.baseURI;
+		}  else {
+			return '';
+		}
 	}
 
 	get childNodes() {
@@ -49,7 +68,7 @@ export class Node extends EventTarget {
 
 		if (! (parent instanceof Node)) {
 			return null;
-		} else if (parent.nodeTye !== Node.ELEMENT_NODE) {
+		} else if (parent.nodeType !== Node.ELEMENT_NODE) {
 			return parent.parentElement;
 		} else {
 			return parent;

@@ -10,6 +10,46 @@ export const HTMLIFrameElement = Document.registerElement('iframe', class HTMLIF
 		this.#sandbox = new DOMTokenList();
 	}
 
+	get allow() {
+		return this.getAttribute('allow');
+	}
+
+	set allow(val){
+		this.setAttribute('allow');
+	}
+
+	get allowFullscreen() {
+		return this.hasAttribute('allowfullscreen');
+	}
+
+	set allowFullscreen(val) {
+		this.toggleAttribute('allowfullscreen', val);
+	}
+
+	get credentialless() {
+		return this.hasAttribute('credentialless');
+	}
+
+	set credentialless(val) {
+		this.toggleAttribute('credentialless', val);
+	}
+
+	get height() {
+		return this.getAttribute('height');
+	}
+
+	set height(val) {
+		this.setAttribute('height', val);
+	}
+
+	get referrerPolicy() {
+		return this.getAttribute('referrerpolicy');
+	}
+
+	set referrerpolicy(val) {
+		this.setAttribute('referrerpolicy', val);
+	}
+
 	get sandbox() {
 		return this.#sandbox;
 	}
@@ -22,7 +62,23 @@ export const HTMLIFrameElement = Document.registerElement('iframe', class HTMLIF
 		this.setAttribute('src', val);
 	}
 
+	get srcdoc() {
+		return this.getAttribute('srcdoc');
+	}
+
+	set srcdoc(val) {
+		this.setAttribute('srcdoc', val);
+	}
+
 	get tagName() {
 		return 'IFRAME';
+	}
+
+	get width() {
+		return this.getAttribute('width');
+	}
+
+	set width(val) {
+		this.setAttribute('width', val);
 	}
 });

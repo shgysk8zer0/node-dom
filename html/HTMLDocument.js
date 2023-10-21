@@ -4,6 +4,7 @@ import { HTMLHtmlElement } from './HTMLHtmlElement.js';
 import { HTMLTitleElement } from './HTMLTitleElement.js';
 import { HTMLBodyElement } from './HTMLBodyElement.js';
 import { HTMLHeadElement } from './HTMLHeadElement.js';
+import { HTML } from '@shgysk8zer0/consts/mimes.js';
 
 export class HTMLDocument extends Document {
 	#documentElement;
@@ -24,6 +25,10 @@ export class HTMLDocument extends Document {
 
 	get body() {
 		return this.#body;
+	}
+
+	get contentType() {
+		return HTML;
 	}
 
 	get head() {

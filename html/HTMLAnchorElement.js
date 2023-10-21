@@ -19,7 +19,13 @@ export const HTMLAnchorElement = Document.registerElement('a', class HTMLAnchorE
 	}
 
 	get href() {
-		return this.getAttribute('href');
+		const base = this.baseURI;
+
+		if (base.length !== 0) {
+			return new URL(this.getAttribute('href'), base).href;
+		}  else {
+			return this.getAttribute('href');
+		}
 	}
 
 	set href(val) {

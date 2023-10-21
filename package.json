@@ -2,7 +2,12 @@
   "name": "@shgysk8zer0/node-dom",
   "version": "0.0.1",
   "description": "A template repo for npm packages",
-  "keywords": ["html", "dom", "node-dom", "node-html"],
+  "keywords": [
+    "html",
+    "dom",
+    "node-dom",
+    "node-html"
+  ],
   "type": "module",
   "main": "./dom.cjs",
   "module": "./dom.js",
@@ -50,7 +55,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shgysk8zer0/@shgysk8zer0/node-dome.git"
+    "url": "git+https://github.com/shgysk8zer0/@shgysk8zer0/node-dom.git"
   },
   "author": "Chris Zuber <admin@kernvalley.us>",
   "license": "MIT",
@@ -65,12 +70,15 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/shgysk8zer0/@shgysk8zer0/node-dome/issues"
+    "url": "https://github.com/shgysk8zer0/@shgysk8zer0/node-dom/issues"
   },
-  "homepage": "https://github.com/shgysk8zer0/@shgysk8zer0/node-dome#readme",
+  "homepage": "https://github.com/shgysk8zer0/@shgysk8zer0/node-dom#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@shgysk8zer0/js-utils": "^1.0.1",
     "@shgysk8zer0/npm-utils": "^1.1.2"
+  },
+  "dependencies": {
+    "@shgysk8zer0/consts": "^1.0.7"
   }
 }

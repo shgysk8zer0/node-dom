@@ -63,7 +63,13 @@ export const HTMLImageElement = Document.registerElement('img', class HTMLImageE
 	}
 
 	get src() {
-		return this.getAttribute('src');
+		const base = this.baseURI;
+
+		if (base.length !== 0) {
+			return new URL(this.getAttribute('src'), base).href;
+		}  else {
+			return this.getAttribute('src');
+		}
 	}
 
 	set src(val){

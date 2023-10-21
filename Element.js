@@ -1,7 +1,7 @@
-import { spinalCase, htmlEscape } from './utils.js';
+import { spinalCase, htmlEscape, getDescendants } from './utils.js';
 import { DOMTokenList } from './DOMTokenList.js';
 import { HTMLCollection } from './HTMLCollection.js';
-import { NamedNodeMap } from './NamedNodeMap.js';
+// import { NamedNodeMap } from './NamedNodeMap.js';
 import { Attr } from './Attr.js';
 import { Node, Text } from './Node.js';
 
@@ -61,7 +61,7 @@ export class Element extends Node {
 	}
 
 	get children() {
-		return new HTMLCollection([...this.childNodes].filter(node => node instanceof Element));
+		return new HTMLCollection([...this.childNodes].filter(node => node.nodeType === Node.ELEMENT_NODE));
 	}
 
 	get classList() {
@@ -163,21 +163,33 @@ export class Element extends Node {
 	}
 
 	set textContent(val) {
-		this.childNodes.forEach(node => this.removeChild(node));
-		this.append(htmlEscape(val.toString()));
-		// this.#children.clear();
-		// this.#children.add(val);
+		this.replaceChildren(new Text(val));
 	}
 
-
 	getAttribute(name) {
-		const attr = this.#attrs.get(name);
+		const attr = this.getAttributeNode(name);
 
 		if (attr instanceof Node) {
 			return attr.value;
 		} else {
 			return '';
 		}
+	}
+
+	getElementsByClassName(names) {
+		const classList = names.trim().split(' ').filter(str => str.length !== 0);
+
+		// Better for performance
+		if (classList.length === 1) {
+			return new HTMLCollection(getDescendants(this, el => el.classList.includes(classList[0])));
+		} else {
+			return new HTMLCollection(getDescendants(this, el => classList.every(name => el.classList.includes(name))));
+		}
+	}
+
+	getElementsByTagName(tagName) {
+		const tag = tagName.toLowerCase();
+		return new HTMLCollection(getDescendants(this, el  => el.tagName.toLowerCase() === tag));
 	}
 
 	hasAttribute(attr) {
@@ -197,6 +209,10 @@ export class Element extends Node {
 		const attr = new Attr(name);
 		attr.value = val;
 		this.setAttributeNode(attr);
+	}
+
+	getAttributeNode(name) {
+		return this.#attrs.get(name);
 	}
 
 	setAttributeNode(attr) {

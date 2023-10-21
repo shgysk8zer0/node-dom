@@ -1,9 +1,9 @@
-import { Node } from './Node.js';
+// import { Node } from './Node.js';
 
 export class NamedNodeMap {
 	#map;
 
-	constructor(el) {
+	constructor(entities) {
 		this.#map = new Map(entities);
 	}
 

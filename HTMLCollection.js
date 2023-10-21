@@ -1,7 +1,7 @@
 export class HTMLCollection {
 	#items;
 
-	constructor(items) {
+	constructor(items = []) {
 		this.#items = Array.from(items);
 	}
 
