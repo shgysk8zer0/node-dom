@@ -3,11 +3,8 @@ import { Document } from '../Document.js';
 import { DOMTokenList } from '../DOMTokenList.js';
 
 export const HTMLLinkElement = Document.registerElement('link', class HTMLLinkElement extends HTMLElement {
-	#relList;
-
 	constructor() {
 		super();
-		this.#relList = new DOMTokenList();
 	}
 
 	get href() {
@@ -27,16 +24,15 @@ export const HTMLLinkElement = Document.registerElement('link', class HTMLLinkEl
 	}
 
 	get rel() {
-		return this.#relList.value;
+		return this.getAttribute('rel');
 	}
 
 	set rel(val) {
-		this.#relList.remove(...this.#relList.values());
-		this.#relList.add(...val.split(' '));
+		this.setAttribute('rel', val);
 	}
 
 	get relList() {
-		return this.#relList;
+		return new DOMTokenList(this, 'rel');
 	}
 
 	get tagName() {

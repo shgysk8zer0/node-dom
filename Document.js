@@ -1,5 +1,4 @@
 import { Node,  Text } from './Node.js';
-// import { Element } from './Element.js';
 import { HTMLUnknownElement } from './html/HTMLUnknownElement.js';
 import { DocumentFragment } from './DocumentFragment.js';
 import { HTMLCollection } from './HTMLCollection.js';

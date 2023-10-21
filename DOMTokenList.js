@@ -1,8 +1,12 @@
 export class DOMTokenList {
 	#items;
+	#el;
+	#attr;
 
-	constructor() {
-		this.#items = new Set();
+	constructor(el, attr) {
+		this.#el = el;
+		this.#attr = attr;
+		this.#items = new Set(el.getAttribute(attr).trim().split(' ').filter(str => str.length !== 0));
 	}
 
 	toString() {
@@ -23,6 +27,7 @@ export class DOMTokenList {
 
 	add(...items){
 		items.forEach(item => this.#items.add(item));
+		this.#el.setAttribute(this.#attr, this.value);
 	}
 
 	contains(item){
@@ -55,5 +60,6 @@ export class DOMTokenList {
 
 	remove(...items) {
 		items.forEach(item => this.#items.delete(item));
+		this.#el.setAttribute(this.#attr, this.value);
 	}
 }
