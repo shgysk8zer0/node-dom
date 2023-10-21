@@ -18,20 +18,13 @@
       "require": "./dom.cjs"
     },
     "./*.js": {
-      "import": "./*.js",
-      "require": "./cjs/*.cjs"
+      "import": "./*.js"
     },
     "./*.mjs": {
-      "import": "./*.js",
-      "require": "./cjs/*.cjs"
-    },
-    "./*.cjs": {
-      "import": "./*.js",
-      "require": "./cjs/*.cjs"
+      "import": "./*.js"
     },
     "./*": {
-      "import": "./*.js",
-      "require": "./cjs/*.cjs"
+      "import": "./*.js"
     }
   },
   "engines": {
