@@ -1,9 +1,12 @@
 import { Node, Text } from './Node.js';
 import { HTMLCollection } from './HTMLCollection.js';
-import { getDescendants } from './utils.js';
-//[ "getElementById", "querySelector", "querySelectorAll", "prepend", "append", "replaceChildren", "children", "firstElementChild", "lastElementChild", "childElementCount" ]
+import { getElementById } from './utils.js';
 
 export class DocumentFragment extends Node {
+	constructor() {
+		super('#document-fragment');
+	}
+
 	get childElementCount()  {
 		return this.children.length;
 	}
@@ -27,16 +30,7 @@ export class DocumentFragment extends Node {
 	}
 
 	getElementById(id) {
-		let found = null;
-
-		for (const child of getDescendants(this)) {
-			if (child.id === id) {
-				found = child;
-				break;
-			}
-		}
-
-		return found;
+		return getElementById(this, id);
 	}
 
 	prepend(...children) {

@@ -2,6 +2,10 @@ import { HTMLElement } from './HTMLElement.js';
 import { Document } from '../Document.js';
 
 export const HTMLInputElement = Document.registerElement('input', class HTMLInputElement extends HTMLElement {
+	constructor() {
+		super('input');
+	}
+
 	get accept() {
 		return this.getAttribute('accept');
 	}
@@ -272,10 +276,6 @@ export const HTMLInputElement = Document.registerElement('input', class HTMLInpu
 
 	set step(val) {
 		this.setAttribute('step', val);
-	}
-
-	get tagName() {
-		return 'INPUT';
 	}
 
 	get type() {

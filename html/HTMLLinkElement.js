@@ -4,7 +4,7 @@ import { DOMTokenList } from '../DOMTokenList.js';
 
 export const HTMLLinkElement = Document.registerElement('link', class HTMLLinkElement extends HTMLElement {
 	constructor() {
-		super();
+		super('link');
 	}
 
 	get href() {
@@ -33,9 +33,5 @@ export const HTMLLinkElement = Document.registerElement('link', class HTMLLinkEl
 
 	get relList() {
 		return new DOMTokenList(this, 'rel');
-	}
-
-	get tagName() {
-		return 'LINK';
 	}
 });

@@ -4,7 +4,7 @@ import { DOMTokenList } from '../DOMTokenList.js';
 
 export const HTMLAnchorElement = Document.registerElement('a', class HTMLAnchorElement extends HTMLElement {
 	constructor() {
-		super();
+		super('a');
 	}
 
 	get download() {
@@ -39,10 +39,6 @@ export const HTMLAnchorElement = Document.registerElement('a', class HTMLAnchorE
 
 	get relList() {
 		return new DOMTokenList(this, 'rel');
-	}
-
-	get tagName() {
-		return 'A';
 	}
 
 	get target(){

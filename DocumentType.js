@@ -1,6 +1,10 @@
 import { Node } from './Node.js';
 
 export class DocumentType extends Node {
+	constructor() {
+		super('html');
+	}
+
 	get name() {
 		return 'html';
 	}

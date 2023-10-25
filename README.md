@@ -147,7 +147,8 @@ that end up being saved or sent as strings.
 - All elements can be created using `new SomeElement()`
 - All elements return their `outerHTML` via `toString()`
 - `Document` has additional static `createElement()` & `registerElement()` methods
-- `Attr.ownerElement` is not read-only
+- `Node` has a constructor that accepts a `nodeName` and `namespaceURI`
+- `Node.parentNode` is not read-only
 - There is no global `document` unless you create it (`globalThis.document = new HTMLDocument()`)
 - The element classes are not attached to the global object either (e.g. no `HTMLScriptElement`)
 - Some property getters associated with attributes may return the wrong types when not set (e.g. `''` instead of `null` or `undefined`)
@@ -156,8 +157,8 @@ that end up being saved or sent as strings.
 
 - Namespaces for attributes and elements (`element.setAttributeNS()`)
 - Doctype will always be `<!DOCTYPE html>`
-- `elememt.after()`, `element.before()`, `node.insertBefore()`, `node.insertAfter()`
-- `node.cloneNode()`, `node.isSameNode()`, `node.isEqualNode()`
+- `elememt.after()`, `element.before()`
+- `node.isSameNode()`, `node.isEqualNode()`
 - `element.style` not supported except as `element.setAttribute('style', styleString)`
 -  [`aria*`](https://developer.mozilla.org/en-US/docs/Web/API/Element#instance_properties_included_from_aria) properties
 - Tables and many form/input properties and methods

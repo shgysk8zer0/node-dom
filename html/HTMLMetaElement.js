@@ -2,6 +2,10 @@ import { HTMLElement } from './HTMLElement.js';
 import { Document } from '../Document.js';
 
 export const HTMLMetaElement = Document.registerElement('meta', class HTMLMetaElement extends HTMLElement {
+	constructor() {
+		super('meta');
+	}
+
 	get charset() {
 		return this.getAttribute('charset');
 	}
@@ -42,7 +46,4 @@ export const HTMLMetaElement = Document.registerElement('meta', class HTMLMetaEl
 		this.setAttribute('name', val);
 	}
 
-	get tagName() {
-		return 'META';
-	}
 });

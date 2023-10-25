@@ -4,7 +4,7 @@ import { DOMTokenList } from '../DOMTokenList.js';
 
 export const HTMLIFrameElement = Document.registerElement('iframe', class HTMLIFrameElement extends HTMLElement {
 	constructor() {
-		super();
+		super('iframe');
 	}
 
 	get allow() {
@@ -65,10 +65,6 @@ export const HTMLIFrameElement = Document.registerElement('iframe', class HTMLIF
 
 	set srcdoc(val) {
 		this.setAttribute('srcdoc', val);
-	}
-
-	get tagName() {
-		return 'IFRAME';
 	}
 
 	get width() {

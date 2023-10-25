@@ -2,6 +2,10 @@ import { HTMLElement } from './HTMLElement.js';
 import { Document } from '../Document.js';
 
 export const HTMLScriptElement = Document.registerElement('script', class HTMLScriptElement extends HTMLElement {
+	constructor() {
+		super('script');
+	}
+
 	get async() {
 		return this.hasAttribute('async');
 	}
@@ -70,10 +74,6 @@ export const HTMLScriptElement = Document.registerElement('script', class HTMLSc
 
 	set src(val) {
 		this.setAttribute('src', val);
-	}
-
-	get tagName() {
-		return 'SCRIPT';
 	}
 
 	get type() {

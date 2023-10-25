@@ -3,6 +3,10 @@ import { Document } from '../Document.js';
 import { FORM_URL_ENCODED } from '@shgysk8zer0/consts/mimes.js';
 
 export const HTMLFormElement = Document.registerElement('form', class HTMLFormElement extends HTMLElement {
+	constructor() {
+		super('form');
+	}
+
 	get action () {
 		const base = this.baseURI;
 
@@ -47,10 +51,6 @@ export const HTMLFormElement = Document.registerElement('form', class HTMLFormEl
 
 	set name(val) {
 		this.setAttribute('name', val);
-	}
-
-	get tagName() {
-		return 'FORM';
 	}
 
 	get target() {

@@ -3,7 +3,7 @@ import { Document } from '../Document.js';
 
 export const HTMLImageElement = Document.registerElement('img', class HTMLImageElement extends HTMLElement {
 	constructor() {
-		super();
+		super('img');
 	}
 
 	get alt() {
@@ -74,10 +74,6 @@ export const HTMLImageElement = Document.registerElement('img', class HTMLImageE
 
 	set src(val){
 		this.setAttribute('src', val);
-	}
-
-	get tagName() {
-		return 'IMG';
 	}
 
 	get width() {

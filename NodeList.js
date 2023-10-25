@@ -14,7 +14,7 @@ export class NodeList {
 	}
 
 	item(n) {
-		return this.#items[n];
+		return this.#items[n] || null;
 	}
 
 	forEach(callback, thisArg) {

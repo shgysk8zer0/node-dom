@@ -1,6 +1,11 @@
 import { Element } from '../Element.js';
+import { HTML as HTML_NS } from '@shgysk8zer0/consts/namespaces.js';
 
 export class HTMLElement extends Element {
+	constructor(nodeName, namespaceURI = HTML_NS) {
+		super(nodeName, namespaceURI);
+	}
+
 	get accessKey() {
 		return this.getAttribute('accesskey');
 	}
@@ -80,6 +85,10 @@ export class HTMLElement extends Element {
 
 	set lang(val) {
 		this.setAttribute('lang', val);
+	}
+
+	get namespaceURI() {
+		return HTML_NS;
 	}
 
 	get nonce() {

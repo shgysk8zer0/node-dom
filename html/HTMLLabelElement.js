@@ -2,6 +2,10 @@ import { HTMLElement } from './HTMLElement.js';
 import { Document } from '../Document.js';
 
 export const HTMLLabelElement = Document.registerElement('label', class HTMLLabelElement extends HTMLElement {
+	constructor() {
+		super('label');
+	}
+
 	get control() {
 		if (this.hasAttribute('for') &&  this.isConnected) {
 			return this.ownerDocument.getElementById(this.getAttribute('for')) || null;
@@ -45,9 +49,5 @@ export const HTMLLabelElement = Document.registerElement('label', class HTMLLabe
 
 	set htmlFor(val) {
 		this.setAttribute('for', val);
-	}
-
-	get tagName() {
-		return 'LABEL';
 	}
 });

@@ -7,7 +7,6 @@ import { HTMLHeadElement } from './HTMLHeadElement.js';
 import { HTML } from '@shgysk8zer0/consts/mimes.js';
 
 export class HTMLDocument extends Document {
-	#documentElement;
 	#head;
 	#body;
 	#doctype;
@@ -15,12 +14,12 @@ export class HTMLDocument extends Document {
 	constructor() {
 		super();
 
-		this.#documentElement = new HTMLHtmlElement();
+		const documentElement = new HTMLHtmlElement();
 		this.#head = new HTMLHeadElement();
 		this.#body = new  HTMLBodyElement();
-		this.#documentElement.append(this.#head, this.#body);
+		documentElement.append(this.#head, this.#body);
 		this.#doctype = new DocumentType();
-		this.append(this.#doctype, this.#documentElement);
+		this.append(this.#doctype, documentElement);
 	}
 
 	get body() {
@@ -37,10 +36,6 @@ export class HTMLDocument extends Document {
 
 	get doctype() {
 		return this.#doctype;
-	}
-
-	get documentElement() {
-		return this.#documentElement;
 	}
 
 	get title() {

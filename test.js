@@ -1,6 +1,9 @@
 import { HTMLDocument } from '@shgysk8zer0/node-dom';
 import { FORM_MULTIPART } from '@shgysk8zer0/consts/mimes.js';
+import { nodeGenerator, createWalker } from './utils.js';
+import { NodeFilter } from './NodeFilter.js';
 
+const date = new Date();
 const document = new HTMLDocument();
 const base = document.createElement('base');
 const main  = document.createElement('main');
@@ -19,6 +22,7 @@ const time = document.createElement('time');
 const footer = document.createElement('footer');
 
 document.title = 'Node Test';
+document.documentElement.classList.add('foo');
 
 base.href = 'https://example.com';
 
@@ -31,7 +35,7 @@ img.referrerPolicy = 'no-referrer';
 img.height = 64;
 img.width = 64;
 img.dataset.fooBar = '42';
-img.classList.add('block', 'card');
+img.classList.add('block', 'card',  'foo');
 
 script.src = '/js/index.js';
 script.defer = true;
@@ -46,8 +50,6 @@ a.title = 'A "d&ngerous" <filename>';
 a.relList.add('noreferrer', 'noopener');
 a.target = '_blank';
 a.append(img);
-
-console.log(a.getAttribute('rel'));
 
 div.classList.add('container');
 div.append(a);
@@ -79,6 +81,8 @@ document.head.prepend(meta, ...(() => {
 
 frag.append(div, '&<<<<dangerous "content">', iframe);
 main.append(frag, document.createElement('hr'));
+main.attachShadow({ mode: 'open' });
+
 
 form.name = 'test';
 form.action = '/api';
@@ -101,12 +105,13 @@ label.htmlFor = input.id;
 label.textContent = 'Some Text';
 
 form.append(label, input);
-main.prepend(form);
+// main.prepend(form);
 
-const date = new Date();
 time.dateTime = date.toISOString();
 time.textContent = date.toLocaleString();
 footer.append(time);
+
+document.body.setAttributeNS('https://ns.org', 'x:foo', 'bar');
 
 document.body.append(
 	document.createElement('header'),
@@ -116,8 +121,17 @@ document.body.append(
 	footer,
 );
 
-// const logo = document.getElementById('logo');
-// logo.classList.add('matched');
-console.log(document.toString());
+document.body.prepend(
+	document.createComment('header'),
+	document.createElementNS('https://ns.org', 'x:foo'),
+	time.cloneNode(true),
+);
 
-// await writeFile('./index.html', document.toString(), 'utf8');
+let n = 0;
+let walker = createWalker(document.body);
+let node = walker.nextNode();
+
+while (node !==  null && n++ < 100) {
+	console.log(`${node.nodeName} [${node.nodeType}]`);
+	node = walker.nextNode();
+}

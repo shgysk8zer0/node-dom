@@ -2,38 +2,24 @@ import { Node } from './Node.js';
 import { htmlEscape } from './utils.js';
 
 export class Attr extends Node {
-	#name;
-	#value;
-	#ownerElement;
-
-	constructor(name) {
-		if (typeof name !== 'string' || ! /^[A-Za-z\d\-_]+$/.test(name)) {
+	constructor(name, namespaceURI) {
+		if (typeof name !== 'string' || ! /^[A-Za-z:\d\-_]+$/.test(name)) {
 			throw new DOMException('String contains an invalid character');
 		} else {
-			super();
-			this.#ownerElement = null;
-			this.#name = name;
+			super(name,  namespaceURI);
 		}
 	}
 
 	toString() {
-		return `${this.name}="${htmlEscape(this.#value)}"`;
+		return `${this.name}="${htmlEscape(this.value)}"`;
 	}
 
 	get ownerElement() {
-		return this.#ownerElement;
-	}
-
-	set ownerElement(el) {
-		if (el !== null && ! (el instanceof Node && el.nodeType === Node.ELEMENT_NODE)) {
-			throw new TypeError('Not an Element');
-		} else {
-			this.#ownerElement = el;
-		}
+		return this.parentElement;
 	}
 
 	get name() {
-		return this.#name;
+		return this.nodeName;
 	}
 
 	get nodeType() {
@@ -41,10 +27,16 @@ export class Attr extends Node {
 	}
 
 	get value() {
-		return this.#value;
+		return this.nodeValue;
 	}
 
 	set value(val) {
-		this.#value = val.toString();
+		this.nodeValue = val;
+	}
+
+	cloneNode() {
+		const clone = new Attr(this.name, this.namespaceURI);
+		clone.value = this.value;
+		return clone;
 	}
 }
