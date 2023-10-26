@@ -1,5 +1,6 @@
 import { Node } from './Node.js';
 import { NodeFilter } from './NodeFilter.js';
+import { showNode, nodeFilter } from './utils.js';
 
 /**
  * @see https://dom.spec.whatwg.org/#nodeiterator
@@ -9,6 +10,11 @@ export class NodeIterator {
 	#whatToShow;
 	#filter;
 	#referenceNode;
+	#indicies;
+	#pointer;
+	#depth;
+	#next;
+	#prev;
 
 	constructor(root, whatToShow = NodeFilter.SHOW_ALL, filter = null) {
 		if (! (root instanceof Node)) {
@@ -16,8 +22,14 @@ export class NodeIterator {
 		}
 
 		this.#root = root;
+		this.#pointer = root.firstChild;
 		this.#whatToShow = parseInt(whatToShow);
 		this.#filter = filter;
+		this.#indicies = [0];
+		this.#depth = 0;
+		const { next, prev } = createIterator(root);
+		this.#next = next;
+		this.#prev = prev;
 	}
 
 	get filter() {
@@ -44,7 +56,32 @@ export class NodeIterator {
 		return null;
 	}
 
+	/**
+	 * Depth-first search for nodes matching `whatToShow` and `filetr` in increasing order
+	*/
 	nextNode() {
-		return null;
+		/**
+		 * This will begin with the first child of the root node.
+		 * Then, if that child has any children, it will return the first child of that node.
+		 * This will continue until a node is reached that has no children.
+		 * Then it will go to the parent and return any next sibling relative to the parent
+		 */
+
+		let reference = null;
+
+		while (this.#pointer instanceof Node) {
+			if (this.#pointer.hasChildNodes()) {
+				this.#indicies.push(0);
+				this.#pointer = this.#pointer.childNodes.item(0);
+
+				if (showNode(this.#pointer, this.whatToShow)) {
+					switch(parseInt(this.foo)) {
+						//
+					}
+				}
+			}
+		}
+
+		return reference;
 	}
 }

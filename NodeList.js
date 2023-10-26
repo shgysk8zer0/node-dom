@@ -1,8 +1,41 @@
+export function createNodeList() {
+	const list = [];
+	const nodeList = new NodeList(list);
+
+	return {
+		nodeList,
+		add: (...nodes) => list.push(...nodes),
+		has: node => list.includes(node),
+		item: index => list[index] || null,
+		find: findCb => list.find(findCb),
+		clear: () => list.splice(0, list.length),
+		replace: (oldNode, newNode) => {
+			const index = list.indexOf(oldNode);
+
+			if (index !== -1) {
+				list[index] = newNode;
+				return oldNode;
+			}
+		},
+		remove: (node) => {
+			const index = list.indexOf(node);
+
+			if (index === -1) {
+				return null;
+			} else {
+				const val = list[index];
+				list.splice(index, 1);
+				return val;
+			}
+		}
+	};
+}
+
 export class NodeList {
 	#items;
 
 	constructor(items = []) {
-		this.#items = items;
+		this.#items = Array.isArray(items) ? items : Array.from(items);
 	}
 
 	[Symbol.iterator]() {

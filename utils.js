@@ -12,7 +12,7 @@ export function createWalker(root) {
 		nextNode() {
 			/*
 			 * First, return any first child of root, then the first child of that, etc.
-			 *
+			 */
 			console.log({ currentNode, item: children.item(index), index, length: children.length });
 			if (index < children.length) {
 				currentNode = children.item(index++);
@@ -54,7 +54,87 @@ export function showNode(node, whatToShow = NodeFilter.SHOW_ALL) {
 	}
 }
 
-export function* nodeGenerator(
+export function nodeFilter(node, filter) {
+	if (filter instanceof Function) {
+		return filter(node);
+	} else if (filter === null) {
+		return NodeFilter.FILTER_ACCEPT;
+	} else if (typeof filter === 'object' && filter.acceptNode instanceof Function) {
+		return filter.acceptNode(node);
+	} else {
+		return NodeFilter.FILTER_ACCEPT;
+	}
+}
+
+export function getNodeGenerators(root) {
+	let current = root;
+
+	function* nextNodeGen() {
+		while (true) {
+			if (! (current instanceof Node)) {
+				yield  null;
+			} else if (current.hasChildNodes()) {
+				current = current.firstChild;
+				yield current;
+			} else if (current.nextSibling instanceof Node) {
+				current = current.nextSibling;
+				yield current;
+			} else if (current.parentNode instanceof Node && ! root.isSameNode(current)) {
+				let ref = current;
+				let found = false;
+
+				while (ref instanceof Node && ref.parentNode instanceof Node) {
+					if (root.isSameNode(ref)) {
+						break;
+					} else if (ref.nextSibling instanceof Node) {
+						current = ref.nextSibling;
+						found = true;
+						break;
+					} else if (ref.parentNode instanceof Node) {
+						ref = ref.parentNode;
+					} else {
+						console.error('Nothing found');
+						break;
+					}
+				}
+
+				yield found ? current : null;
+			} else {
+				yield null;
+			}
+		}
+	}
+
+	function* prevNodeGen() {
+		while (true) {
+			if (! (current instanceof Node)) {
+				console.log('Current not a node');
+				yield  null;
+			} else if (current.previousSibling instanceof Node) {
+				console.log('previousSibling');
+				current = current.previousSibling;
+				yield current;
+			} else if (current.parentNode instanceof Node && ! root.isSameNode(current)) {
+				console.log('Going up to parent');
+				current = current.parentNode;
+				const tmp = current;
+				yield current;
+
+				if (tmp.isSameNode(current) && current.hasChildNodes()) {
+					current = current.lastChild;
+					yield current;
+				}
+			} else {
+				console.log('This is the end');
+				yield null;
+			}
+		}
+	}
+
+	return [nextNodeGen(root), prevNodeGen(root)];
+}
+
+export function* nodeFilteredGenerator(
 	root,
 	whatToShow = NodeFilter.SHOW_ALL,
 	filter = () => NodeFilter.FILTER_ACCEPT,
@@ -67,12 +147,12 @@ export function* nodeGenerator(
 					case true:
 						yield node;
 
-						yield* nodeGenerator(node, whatToShow, filter);
+						yield* nodeFilteredGenerator(node, whatToShow, filter);
 						break;
 
 					case NodeFilter.FILTER_SKIP:
 					case false:
-						yield* nodeGenerator(node, whatToShow, filter);
+						yield* nodeFilteredGenerator(node, whatToShow, filter);
 						break;
 
 					case NodeFilter.FILTER_REJECT:
@@ -81,7 +161,7 @@ export function* nodeGenerator(
 
 				}
 			} else if (node.hasChildNodes()) {
-				yield* nodeGenerator(node, whatToShow, filter);
+				yield* nodeFilteredGenerator(node, whatToShow, filter);
 			} else {
 				continue;
 			}

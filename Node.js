@@ -1,10 +1,12 @@
 import { NodeList } from './NodeList.js';
-import { getDescendants } from './utils.js';
+import { NodeFilter } from './NodeFilter.js';
+import { getDescendants, nodeFilteredGenerator } from './utils.js';
 
 export class Node extends EventTarget {
 	#nodeName;
 	#namespaceURI;
 	#children;
+	#childNodes;
 	#parent;
 	#nodeValue;
 
@@ -13,6 +15,7 @@ export class Node extends EventTarget {
 		this.#children = [];
 		this.#parent = null;
 		this.#nodeValue = null;
+		this.#childNodes = new NodeList(this.#children);
 
 		if (typeof nodeName === 'string')  {
 			this.#nodeName = nodeName;
@@ -47,7 +50,7 @@ export class Node extends EventTarget {
 	}
 
 	get childNodes() {
-		return new NodeList(this.#children);
+		return this.#childNodes;
 	}
 
 	get firstChild() {
@@ -175,7 +178,7 @@ export class Node extends EventTarget {
 		if (! (child instanceof Node)) {
 			throw new TypeError('appendChild needs a Node.');
 		} else if (child.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-			this.#children.push(...child.childNodes);
+			child.childNodes.forEach(child => this.appendChild(child));
 		} else if (child.nodeType === Node.ATTRIBUTE_NODE) {
 			throw new DOMException('Node.appendChild: May not add an Attribute as a child');
 		} else {
@@ -190,8 +193,8 @@ export class Node extends EventTarget {
 		clone.#namespaceURI = this.#namespaceURI;
 		clone.#nodeValue = this.#nodeValue;
 
-		if (deep) {
-			clone.#children = this.#children.map(node => node.cloneNode(true));
+		if (deep && this.hasChildNodes()) {
+			clone.append(...this.#children.map(node => node.cloneNode(true)));
 		}
 
 		return clone;
@@ -220,25 +223,10 @@ export class Node extends EventTarget {
 	}
 
 	contains(otherNode) {
-		let found = false;
+		// let found = false;
+		const gen = nodeFilteredGenerator(this, NodeFilter.SHOW_ALL, node => node.isSameNode(otherNode));
 
-		for (const child of this.childNodes) {
-			if (child.isSameNode(otherNode)) {
-				found = true;
-				break;
-			}
-		}
-
-		if (! found) {
-			for (const child of this.childNodes) {
-				if (child.contains(otherNode)) {
-					found = true;
-					break;
-				}
-			}
-		}
-
-		return found;
+		return gen.next().value instanceof Node;
 	}
 
 	getRootNode() {
@@ -269,7 +257,7 @@ export class Node extends EventTarget {
 
 	// This is overly expensive, but I don't think it can be improved much
 	isEqualNode(otherNode) {
-		return otherNode instanceof Node
+		return this.isSameNode(otherNode) || (otherNode instanceof Node
 			&& otherNode.nodeType === this.nodeType
 			&& otherNode.nodeName === this.nodeName
 			&& otherNode.namespaceURI === this.namespaceURI
@@ -277,7 +265,8 @@ export class Node extends EventTarget {
 			&& otherNode.childNodes.length == this.childNodes.length
 			&& [...otherNode.childNodes].every(
 				(child, i) => this.#children[i].isEqualNode(child)
-			);
+			)
+		);
 	}
 
 	isSameNode(otherNode) {
@@ -296,9 +285,10 @@ export class Node extends EventTarget {
 		const index = this.#children.indexOf(child);
 
 		if (index !== -1) {
-			// @TODO Update #parent
 			this.#children[index].#parent = null;
-			delete this.#children[index];
+			this.#children.splice(index, 1);
+
+			return child;
 		}
 	}
 
@@ -308,6 +298,7 @@ export class Node extends EventTarget {
 		if (index !== -1) {
 			// @TODO update #parent
 			oldChild.#parent = null;
+			newChild.remove();
 			newChild.#parent = this;
 			this.#children[index] = newChild;
 		}
@@ -315,16 +306,8 @@ export class Node extends EventTarget {
 
 	replaceChildren(...nodes) {
 		this.#children.forEach(child => child.parentNode = null);
-		this.#children = nodes.map(node => {
-			if (node instanceof Node) {
-				node.parentNode = this;
-				return node;
-			} else {
-				const child = new Text(node);
-				child.parentNode = this;
-				return child;
-			}
-		});
+		this.#children.splice(0, this.#children.length);
+		this.append(...nodes);
 	}
 
 	static ELEMENT_NODE = 1;

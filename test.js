@@ -1,7 +1,8 @@
 import { HTMLDocument } from '@shgysk8zer0/node-dom';
 import { FORM_MULTIPART } from '@shgysk8zer0/consts/mimes.js';
-import { nodeGenerator, createWalker } from './utils.js';
-import { NodeFilter } from './NodeFilter.js';
+import { getNodeGenerators } from './utils.js';
+import { Node } from './Node.js';
+// import { NodeFilter } from './NodeFilter.js';
 
 const date = new Date();
 const document = new HTMLDocument();
@@ -127,11 +128,41 @@ document.body.prepend(
 	time.cloneNode(true),
 );
 
+const [nextGen, prevGen] = getNodeGenerators(document);
 let n = 0;
-let walker = createWalker(document.body);
-let node = walker.nextNode();
+let cur = null;
 
-while (node !==  null && n++ < 100) {
-	console.log(`${node.nodeName} [${node.nodeType}]`);
-	node = walker.nextNode();
+for (const node of nextGen) {
+	if (n++ > 100 || ! (node instanceof Node)) {
+		break;
+	} else {
+		cur = node;
+	}
 }
+
+console.log(`Now in reverse, starting from ${cur}`);
+
+const length = n;
+for (const node of prevGen) {
+	if (n < 0) {
+		console.error('Too Far!');
+		break;
+	}
+
+	if (n === 0 || ! (node instanceof Node)) {
+		break;
+	} else {
+		console.log(`${node.nodeName} [${node.nodeType}]. #${n} of ${length}`);
+	}
+
+	n--;
+}
+
+// let n = 0;
+// let walker = createWalker(document.body);
+// let node = walker.nextNode();
+
+// while (node !== null && n++ < 100) {
+// 	console.log(`${node.nodeName} [${node.nodeType}]`);
+// 	node = walker.nextNode();
+// }
