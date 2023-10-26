@@ -93,7 +93,6 @@ export function getNodeGenerators(root) {
 					} else if (ref.parentNode instanceof Node) {
 						ref = ref.parentNode;
 					} else {
-						console.error('Nothing found');
 						break;
 					}
 				}
@@ -108,14 +107,11 @@ export function getNodeGenerators(root) {
 	function* prevNodeGen() {
 		while (true) {
 			if (! (current instanceof Node)) {
-				console.log('Current not a node');
 				yield  null;
 			} else if (current.previousSibling instanceof Node) {
-				console.log('previousSibling');
 				current = current.previousSibling;
 				yield current;
 			} else if (current.parentNode instanceof Node && ! root.isSameNode(current)) {
-				console.log('Going up to parent');
 				current = current.parentNode;
 				const tmp = current;
 				yield current;
@@ -125,7 +121,6 @@ export function getNodeGenerators(root) {
 					yield current;
 				}
 			} else {
-				console.log('This is the end');
 				yield null;
 			}
 		}
