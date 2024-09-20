@@ -32,9 +32,9 @@
   },
   "private": false,
   "scripts": {
-    "test": "npm run lint:js && npm run build",
-    "preversion": "npm test",
-    "prepare": "npm run build",
+    "test": "npm run lint:js",
+    "preversion": "npm test & npm run build",
+    "prepare": "npm test && npm run build",
     "lint:js": "eslint .",
     "fix:js": "eslint . --fix",
     "build": "npm run build:js",
@@ -68,6 +68,7 @@
   "homepage": "https://github.com/shgysk8zer0/node-dom#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@shgysk8zer0/eslint-config": "^1.0.1",
     "@shgysk8zer0/js-utils": "^1.0.1",
     "@shgysk8zer0/npm-utils": "^1.1.2"
   },

@@ -11,6 +11,7 @@ importmap.json
 importmap.yaml
 test.js
 *.config.js
+*.test.js
 *.gz
 *.tgz
 *.log
